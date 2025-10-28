@@ -99,11 +99,11 @@ flowchart TD
     classDef start fill:#4CAF50,stroke:#333,stroke-width:2px,color:#fff;
     classDef decision fill:#FFC107,stroke:#333,stroke-width:2px,color:#000;
     classDef process fill:#03A9F4,stroke:#333,stroke-width:2px,color:#fff;
-    classDef end fill:#F44336,stroke:#333,stroke-width:2px,color:#fff;
+    classDef endState fill:#F44336,stroke:#333,stroke-width:2px,color:#fff;
     classDef monitor fill:#9C27B0,stroke:#333,stroke-width:2px,color:#fff;
 
     Start([Incoming Runbook Request<br>(Ticket / API)]):::start --> Feasibility{Feasibility Agent<br>Check tools & data}:::decision
-    Feasibility -->|Not Feasible| Abort([Abort & Log]):::end
+    Feasibility -->|Not Feasible| Abort([Abort & Log]):::endState
     Feasibility -->|Feasible| CheckDB{Plan Exists in DB?}:::decision
     CheckDB -->|Yes| UseCache[[Use Cached Plan]]:::process
     CheckDB -->|No| Plan[[Planning Agent<br>(Generate Plan with AI)]]:::process
