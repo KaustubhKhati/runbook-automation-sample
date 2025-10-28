@@ -92,6 +92,78 @@ The system models automation in the following way:
 
 ---
 
+## 🔄 Full Workflow Diagram
+
+```mermaid
+flowchart TD
+    classDef start fill:#4CAF50,stroke:#333,stroke-width:2px,color:#fff;
+    classDef decision fill:#FFC107,stroke:#333,stroke-width:2px,color:#000;
+    classDef process fill:#03A9F4,stroke:#333,stroke-width:2px,color:#fff;
+    classDef end fill:#F44336,stroke:#333,stroke-width:2px,color:#fff;
+    classDef monitor fill:#9C27B0,stroke:#333,stroke-width:2px,color:#fff;
+
+    Start([Incoming Runbook Request<br>(Ticket / API)]):::start --> Feasibility{Feasibility Agent<br>Check tools & data}:::decision
+    Feasibility -->|Not Feasible| Abort([Abort & Log]):::end
+    Feasibility -->|Feasible| CheckDB{Plan Exists in DB?}:::decision
+    CheckDB -->|Yes| UseCache[[Use Cached Plan]]:::process
+    CheckDB -->|No| Plan[[Planning Agent<br>(Generate Plan with AI)]]:::process
+    Plan --> SavePlan[[Save Plan to DB]]:::process
+    UseCache --> Execute[[Execution Agent<br>(Execute tasks asynchronously)]]:::process
+    SavePlan --> Execute
+    Execute --> N8N[[N8N Tool<br>Trigger Workflow]]:::process
+    Execute --> ZD[[Zendesk Tool<br>Update Ticket]]:::process
+    Execute --> Auth[[Authentication Tool<br>Validate Access]]:::process
+    N8N --> Monitor[(Prometheus Metrics)]:::monitor
+    ZD --> Monitor
+    Auth --> Monitor
+```
+
+**Caption:**
+> End-to-end process with decisions, caching, AI planning, execution via multiple tools, and observability monitoring.
+
+---
+
+## 🏗 Architecture Overview
+
+```mermaid
+flowchart TD
+    classDef start fill:#4CAF50,stroke:#333,stroke-width:2px,color:#fff;
+    classDef agent fill:#03A9F4,stroke:#333,stroke-width:2px,color:#fff;
+    classDef tool fill:#FF9800,stroke:#333,stroke-width:2px,color:#fff;
+
+    A([Incoming Request<br>(Ticket / API Call)]):::start --> B[[Feasibility Agent<br>(Checks execution possibility)]]:::agent
+    B --> C[[Planning Agent<br>(Uses AI to create plan)]]:::agent
+    C --> D[[Execution Agent<br>(Runs plan using tools)]]:::agent
+    D --> T1[[N8N Tool<br>(Orchestration Workflow)]]:::tool
+    D --> T2[[ZendeskTool<br>(Tickets API)]]:::tool
+    D --> T3[[Auth Tool<br>(Authentication Service)]]:::tool
+```
+
+**Caption:**
+> Agents decide; tools act. AI orchestrates via LangGraph4j.
+
+---
+
+## 🧠 Plan Re-use for Efficiency
+
+```mermaid
+flowchart TD
+    classDef decision fill:#FFC107,stroke:#333,stroke-width:2px,color:#000;
+    classDef process fill:#03A9F4,stroke:#333,stroke-width:2px,color:#fff;
+
+    A([Incoming Runbook<br>Execution Request]):::process --> B{Plan Exists in DB?}:::decision
+    B -->|Yes| Skip[[Skip AI Planning]]:::process
+    B -->|No| P[[Planning Agent<br>AI generates plan)]]:::process
+    P --> S[[Save Plan to DB]]:::process
+    S --> E[[Execution Agent<br>Execute via tools)]]:::process
+    Skip --> E
+```
+
+**Caption:**
+> Cached plans = fewer AI calls, faster execution, reduced cost.
+
+---
+
 ## 🔧 Configuration
 
 ### Environment Variables / Properties
