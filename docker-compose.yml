@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  qdrant:
+    image: qdrant/qdrant:v1.8.3
+    container_name: qdrant-vector-db
+    restart: always
+    ports:
+      - "6334:6334" # REST API
+      - "6333:6333" # gRPC API
+    volumes:
+      - qdrant_data:/qdrant/storage
+    environment:
+      QDRANT__SERVICE__HOST: 0.0.0.0
+      QDRANT__SERVICE__PORT: 6334
+
+volumes:
+  qdrant_data:

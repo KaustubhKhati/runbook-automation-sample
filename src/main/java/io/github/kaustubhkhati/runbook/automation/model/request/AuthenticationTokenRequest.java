@@ -1,0 +1,13 @@
+package io.github.kaustubhkhati.runbook.automation.model.request;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+public class AuthenticationTokenRequest {
+   private String username;
+   private String password;
+}

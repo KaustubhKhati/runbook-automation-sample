@@ -1,0 +1,20 @@
+zendesk-groups:
+  groups:
+    - url: https://api.zendesk.com/api/v2/groups/1234.json
+      id: 1234
+      is_public: true
+      name: 001_GROUP
+      description: Group for managing the 001_GROUP
+      default: false
+      deleted: false
+      created_at: "2025-05-13T12:23:14Z"
+      updated_at: "2025-05-13T12:25:53Z"
+    - url: https://api.zendesk.com/api/v2/groups/5678.json
+      id: 5678
+      is_public: true
+      name: 002_GROUP
+      description: ""
+      default: false
+      deleted: false
+      created_at: "2022-01-12T14:00:49Z"
+      updated_at: "2022-01-12T14:00:49Z"

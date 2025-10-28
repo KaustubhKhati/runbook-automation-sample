@@ -1,0 +1,88 @@
+server:
+  port: 8080
+
+webclient:
+  insecure-ssl: true
+
+spring:
+  config:
+    import: classpath:zendesk_groups.yml
+  ai:
+    vectorstore:
+      qdrant:
+        host: localhost
+        port: 6334
+        collection-name: "runbooks"
+        use-tls: false
+        initialize-schema: true
+    azure:
+      openai:
+        endpoint: ${azure-openai-endpoint}
+        api-key: ${azure-openai-api-key}
+        chat:
+          options:
+            deployment-name: "gpt-4o"
+            api-version: "2025-01-01-preview"
+        embeddings:
+          options:
+            deployment-name: "text-embedding-ada-002"
+            api-version: "2023-05-15"
+  datasource:
+    url: jdbc:sqlite:./runbooks.db
+    driver-class-name: org.sqlite.JDBC
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+  jackson:
+    serialization:
+      INDENT_OUTPUT: true
+
+logging:
+  level:
+    root: INFO
+    com.example.runbook: INFO
+
+jobs:
+  cleanup:
+    retentionDays: 30
+    cron: "0 0 2 * * *"
+  zendeskPoll:
+    cron: "0 */2 * * * *"  # every 5 min
+    viewId: 1234
+
+authentication:
+  origin: "https://api.example.com"
+  username: ${clientId}
+  password: ${secret}
+  auth:
+    expiryBufferTimeInMillis: 10000
+  endpoints:
+    issueJTWToken: "/authentication/issue/jwt/token"
+
+zendesk:
+  baseUrl: "https://api.example.com/zendesk"
+  endpoints:
+    ticketsByView: "/api/v2/views/{viewId}/tickets"
+    addComment: "/api/v2/tickets/{ticketId}.json"
+n8n:
+  origin: "https://api.example.com/n8n"
+  webhookCredentials: ${webhook_credentials}
+  endpoints:
+    webhook1: "/webhooks/webhook1"
+
+splunk:
+  base-url: https://splunk.mycompany.com:8089
+  auth-token: ${SPLUNK_AUTH_TOKEN}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  metrics:
+    tags:
+      application: runbook-automation
+  tracing:
+    sampling:
+      probability: 1.0
