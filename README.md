@@ -96,26 +96,26 @@ The system models automation in the following way:
 
 ```mermaid
 flowchart TD
-    classDef start fill:#4CAF50,stroke:#333,stroke-width:2px,color:#fff;
-    classDef decision fill:#FFC107,stroke:#333,stroke-width:2px,color:#000;
-    classDef process fill:#03A9F4,stroke:#333,stroke-width:2px,color:#fff;
-    classDef endState fill:#F44336,stroke:#333,stroke-width:2px,color:#fff;
-    classDef monitor fill:#9C27B0,stroke:#333,stroke-width:2px,color:#fff;
+    classDef startClass fill:#4CAF50,stroke:#333,stroke-width:2px,color:#fff;
+    classDef decisionClass fill:#FFC107,stroke:#333,stroke-width:2px,color:#000;
+    classDef processClass fill:#03A9F4,stroke:#333,stroke-width:2px,color:#fff;
+    classDef endStateClass fill:#F44336,stroke:#333,stroke-width:2px,color:#fff;
+    classDef monitorClass fill:#9C27B0,stroke:#333,stroke-width:2px,color:#fff;
 
-    Start([Incoming Runbook Request<br>(Ticket / API)]):::start --> Feasibility{Feasibility Agent<br>Check tools & data}:::decision
-    Feasibility -->|Not Feasible| Abort([Abort & Log]):::endState
-    Feasibility -->|Feasible| CheckDB{Plan Exists in DB?}:::decision
-    CheckDB -->|Yes| UseCache[[Use Cached Plan]]:::process
-    CheckDB -->|No| Plan[[Planning Agent<br>(Generate Plan with AI)]]:::process
-    Plan --> SavePlan[[Save Plan to DB]]:::process
-    UseCache --> Execute[[Execution Agent<br>(Execute tasks asynchronously)]]:::process
-    SavePlan --> Execute
-    Execute --> N8N[[N8N Tool<br>Trigger Workflow]]:::process
-    Execute --> ZD[[Zendesk Tool<br>Update Ticket]]:::process
-    Execute --> Auth[[Authentication Tool<br>Validate Access]]:::process
-    N8N --> Monitor[(Prometheus Metrics)]:::monitor
-    ZD --> Monitor
-    Auth --> Monitor
+    S1([Incoming Runbook Request\n(Ticket / API)]):::startClass --> FZ{Feasibility Agent\nCheck tools & data}:::decisionClass
+    FZ -->|Not Feasible| AB([Abort & Log]):::endStateClass
+    FZ -->|Feasible| DB{Plan Exists in DB?}:::decisionClass
+    DB -->|Yes| UC[[Use Cached Plan]]:::processClass
+    DB -->|No| PL[[Planning Agent\nGenerate Plan with AI]]:::processClass
+    PL --> SV[[Save Plan to DB]]:::processClass
+    UC --> EX[[Execution Agent\nExecute tasks asynchronously]]:::processClass
+    SV --> EX
+    EX --> TN8N[[N8N Tool\nTrigger Workflow]]:::processClass
+    EX --> TZd[[Zendesk Tool\nUpdate Ticket]]:::processClass
+    EX --> TAuth[[Authentication Tool\nValidate Access]]:::processClass
+    TN8N --> MON[(Prometheus Metrics)]:::monitorClass
+    TZd --> MON
+    TAuth --> MON
 ```
 
 **Caption:**
