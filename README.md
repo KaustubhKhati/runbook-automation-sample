@@ -102,18 +102,18 @@ flowchart TD
     classDef endStateClass fill:#F44336,stroke:#333,stroke-width:2px,color:#fff;
     classDef monitorClass fill:#9C27B0,stroke:#333,stroke-width:2px,color:#fff;
 
-    S1([Incoming Runbook Request\n(Ticket / API)]):::startClass --> FZ{Feasibility Agent\nCheck tools & data}:::decisionClass
-    FZ -->|Not Feasible| AB([Abort & Log]):::endStateClass
-    FZ -->|Feasible| DB{Plan Exists in DB?}:::decisionClass
-    DB -->|Yes| UC[[Use Cached Plan]]:::processClass
-    DB -->|No| PL[[Planning Agent\nGenerate Plan with AI]]:::processClass
-    PL --> SV[[Save Plan to DB]]:::processClass
-    UC --> EX[[Execution Agent\nExecute tasks asynchronously]]:::processClass
+    S1(["Incoming Runbook Request\n(Ticket / API)"]):::startClass --> FZ{"Feasibility Agent\nCheck tools & data"}:::decisionClass
+    FZ -->|Not Feasible| AB(["Abort & Log"]):::endStateClass
+    FZ -->|Feasible| DB{"Plan Exists in DB?"}:::decisionClass
+    DB -->|Yes| UC[["Use Cached Plan"]]:::processClass
+    DB -->|No| PL[["Planning Agent\nGenerate Plan with AI"]]:::processClass
+    PL --> SV[["Save Plan to DB"]]:::processClass
+    UC --> EX[["Execution Agent\nExecute tasks asynchronously"]]:::processClass
     SV --> EX
-    EX --> TN8N[[N8N Tool\nTrigger Workflow]]:::processClass
-    EX --> TZd[[Zendesk Tool\nUpdate Ticket]]:::processClass
-    EX --> TAuth[[Authentication Tool\nValidate Access]]:::processClass
-    TN8N --> MON[(Prometheus Metrics)]:::monitorClass
+    EX --> TN8N[["N8N Tool\nTrigger Workflow"]]:::processClass
+    EX --> TZd[["Zendesk Tool\nUpdate Ticket"]]:::processClass
+    EX --> TAuth[["Authentication Tool\nValidate Access"]]:::processClass
+    TN8N --> MON[("Prometheus Metrics")]:::monitorClass
     TZd --> MON
     TAuth --> MON
 ```
