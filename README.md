@@ -113,7 +113,7 @@ flowchart TD
     EX --> TN8N[["N8N Tool\nTrigger Workflow"]]:::processClass
     EX --> TZd[["Zendesk Tool\nUpdate Ticket"]]:::processClass
     EX --> TAuth[["Authentication Tool\nValidate Access"]]:::processClass
-    TN8N --> MON[("Prometheus Metrics")]:::monitorClass
+    TN8N --> MON[("End")]:::monitorClass
     TZd --> MON
     TAuth --> MON
 ```
@@ -127,16 +127,16 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    classDef start fill:#4CAF50,stroke:#333,stroke-width:2px,color:#fff;
-    classDef agent fill:#03A9F4,stroke:#333,stroke-width:2px,color:#fff;
-    classDef tool fill:#FF9800,stroke:#333,stroke-width:2px,color:#fff;
+    classDef startClass fill:#4CAF50,stroke:#333,stroke-width:2px,color:#fff;
+    classDef agentClass fill:#03A9F4,stroke:#333,stroke-width:2px,color:#fff;
+    classDef toolClass fill:#FF9800,stroke:#333,stroke-width:2px,color:#fff;
 
-    A([Incoming Request<br>(Ticket / API Call)]):::start --> B[[Feasibility Agent<br>(Checks execution possibility)]]:::agent
-    B --> C[[Planning Agent<br>(Uses AI to create plan)]]:::agent
-    C --> D[[Execution Agent<br>(Runs plan using tools)]]:::agent
-    D --> T1[[N8N Tool<br>(Orchestration Workflow)]]:::tool
-    D --> T2[[ZendeskTool<br>(Tickets API)]]:::tool
-    D --> T3[[Auth Tool<br>(Authentication Service)]]:::tool
+    ARQ(["Incoming Request\n(Ticket / API Call)"]):::startClass --> FA[["Feasibility Agent\nChecks execution possibility"]]:::agentClass
+    FA --> PA[["Planning Agent\nUses AI to create plan"]]:::agentClass
+    PA --> EA[["Execution Agent\nRuns plan using tools"]]:::agentClass
+    EA --> TN8N[["N8N Tool\nOrchestration Workflow"]]:::toolClass
+    EA --> TZen[["ZendeskTool\nTickets API"]]:::toolClass
+    EA --> TAU[["Auth Tool\nAuthentication Service"]]:::toolClass
 ```
 
 **Caption:**
@@ -148,15 +148,15 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    classDef decision fill:#FFC107,stroke:#333,stroke-width:2px,color:#000;
-    classDef process fill:#03A9F4,stroke:#333,stroke-width:2px,color:#fff;
+    classDef decisionClass fill:#FFC107,stroke:#333,stroke-width:2px,color:#000;
+    classDef processClass fill:#03A9F4,stroke:#333,stroke-width:2px,color:#fff;
 
-    A([Incoming Runbook<br>Execution Request]):::process --> B{Plan Exists in DB?}:::decision
-    B -->|Yes| Skip[[Skip AI Planning]]:::process
-    B -->|No| P[[Planning Agent<br>AI generates plan)]]:::process
-    P --> S[[Save Plan to DB]]:::process
-    S --> E[[Execution Agent<br>Execute via tools)]]:::process
-    Skip --> E
+    PRQ(["Incoming Runbook\nExecution Request"]):::processClass --> PDB{"Plan Exists in DB?"}:::decisionClass
+    PDB -->|Yes| SKP[["Skip AI Planning"]]:::processClass
+    PDB -->|No| PLN[["Planning Agent\nAI generates plan"]]:::processClass
+    PLN --> SAV[["Save Plan to DB"]]:::processClass
+    SAV --> EXE[["Execution Agent\nExecute via tools"]]:::processClass
+    SKP --> EXE
 ```
 
 **Caption:**
